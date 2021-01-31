@@ -30,5 +30,13 @@
 ## zsset如何实现有序
 
 
+## redis 持久化
+## redis底层数据结构 2次
+## zset的时间复杂度
+## redis源码
+
+## redis 跳表 
+## redis hashtable实现，什么时候退化成ziplist
+## ziplist 和 hashtable 之间区别
 
 
