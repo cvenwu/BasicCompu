@@ -361,6 +361,7 @@ https://www.bilibili.com/video/BV11a4y1H7WF?from=search&seid=84378165225275780
 
 ---------
 
+## 其他问题
 
 ### 计算机在设置ip的时候会设置哪些参数
 ip地址，子网掩码，网关地址
