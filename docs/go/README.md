@@ -5,32 +5,54 @@
 ## 基本数据结构
 
 ### 数组未初始化能不能求len
-可以，例如 `var a [5]int` 将会赋对应类型的零值
-没有初始化的意思就是没有赋值
-注意：切片只是声明相当于一个nil，可以直接不断append进行追加元素
+!> 这里没有初始化的意思就是没有赋值
+**可以，例如 `var a [5]int` 将会赋对应类型的零值**
 
 ### 未初始化的slice能不能append
-
+!> 可以，未初始化只是一个为长度和容量都为0的一个切片，使用append将会触发扩容机制
+注意：切片未只是声明并未初始化，如`var a []int`，相当于一个nil，可以直接append进行追加元素，将会触发扩容
 
 ### go数组和slice的区别
 1. 数组定长，定义的时候就需要确定。切片长度不定，append时会自动扩容
 2. 相同大小数组可以赋值，会拷贝全部内容。slice赋值和指针一样。数组和slice之间不能相互赋值。当然slice有自己的copy函数
 3. 数组也可以进行切片，返回值是一个slice，改变slice时会同步修改数组内容，相当于取得了这个数组的指针
 
+类似问题：切片和数组区别和底层
+[参考1](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array/)
+[参考2](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array-and-slice/#323-%E8%AE%BF%E9%97%AE%E5%85%83%E7%B4%A0)
+[参考](https://zhuanlan.zhihu.com/p/341945051)
+[参考4](https://mp.weixin.qq.com/s/MTZ0C9zYsNrb8wyIm2D8BA)
+
+
 ### slice底层实现
+[参考1](https://jiajunhuang.com/articles/2020_05_23-go_slice.md.html)
+[参考2](https://jiajunhuang.com/articles/2017_07_18-golang_slice.md.html)
+[参考3](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array-and-slice/#323-%E8%AE%BF%E9%97%AE%E5%85%83%E7%B4%A0)
+[参考](https://zhuanlan.zhihu.com/p/341945051)
+[参考4](https://mp.weixin.qq.com/s/MTZ0C9zYsNrb8wyIm2D8BA)
 
-
-### slice的底层原理
+类似问题：slice的底层原理
+类似问题：切片怎么扩容,扩容过程中需不需要重新写入
 ### map的底层原理
+[参考1](https://jiajunhuang.com/articles/2017_07_27-golang_map.md.html)
+[参考2](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/)
+[参考3](https://zhuanlan.zhihu.com/p/341945051)
+[参考4](https://mp.weixin.qq.com/s/2CDpE5wfoiNXm1agMAq4wA)
+类似问题：go map结构实现，并发安全否
+
 ### Map是线程安全的吗？怎么解决并发安全问题
-### Go切片和数据之间的区别
-### 切片和数组区别和底层
+map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](https://jiajunhuang.com/articles/2017_07_27-golang_map.md.html)
+
 ### go 常见数据结构
-### go map结构实现，并发安全否
+数组，切片，映射，通道，[所有的讲解参考](https://zhuanlan.zhihu.com/p/341945051)
+
 ### Slice、map都是安全的吗
+
 ### Golang中的 map 以及 slice 的源码分析以及slice内存泄漏，需要了解什么是内存泄漏
 
-###  切片怎么扩容,扩容过程中需不需要重新写入
+
+### 线程安全的map锁分段的细节
+
 
 ----------
 ## channel 管道
@@ -46,7 +68,7 @@
 
 类似问题： go的channel 有缓冲无缓冲如何定义，区别 
 
-## 关闭channel读取后会怎样
+### 关闭channel读取后会怎样
 
 ----------
 
@@ -58,10 +80,19 @@
 [参考](https://blog.csdn.net/leeright/article/details/94466831)
 goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合预期的退出，直到程序结束，此goroutine才退出，这种情况就是 goroutine 泄露。
 
+![IR4yAK](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IR4yAK.png)
+[参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
+
+
 ### go中导致内存泄漏的原因
+![IR4yAK](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IR4yAK.png)
+[参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
+
 
 ### 了解内存泄漏吗？有什么危害？
 
+![IR4yAK](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IR4yAK.png)
+[参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
 
 ### go 内存分配
 
@@ -74,10 +105,8 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 !>（上次哔哩哔哩面试问到了，幸亏我事后看了一眼是类似双重检验锁的实现方式哦），让我写出来，我写出了一大半，还让我运行一下，我运行不出来
 ### context包有没有用过，我说没用过
 ###  进程，线程，协程的区别
-
 ### sync.Map 怎么解决线程安全问题？看过源码吗？
 ### golang 的 waitGroup 用法
-
 ### Go的协程可以不可以自己让出cpu
 ### Go的协程可以只挂在一个线程上面吗
 ### 一个协程挂起换入另外一个协程是什么过程？
@@ -100,17 +129,11 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 「Don’t communicate by sharing memory, share memory by communicating」所以更提倡使用 channel 进行通信。
 当时答的时候也只答了 channel，面试官说还有一种，怎么都想不起来Orz。
 ###  Go里面一个协程能保证绑定在一个内核线程上面的。
-
 ### go多线程
 ### golang协程i/o多路复用机制
 
-
-
-### 线程安全的map锁分段的细节
-
 ----------
 ## GMP与垃圾回收
-
 ### go垃圾回收
 ### go gmp 调度 4次
 ### go 垃圾回收，什么时候触发 2次
