@@ -4,6 +4,7 @@
 [参考](https://zhuanlan.zhihu.com/p/140876416)
 
 
+
 ## 事务的特点或特性
 !> ACID：分别对应原子性atomicity，一致性consistency，隔离性isolation，持久性durability
 1. **原子性**，是指一个事务操作不可分割，要么成功，要么失败，不能有一半成功一半失败的情况。
