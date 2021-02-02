@@ -1,6 +1,7 @@
 # BasicComp
 > 记录-----面试计算机基础知识
 
+## 分类
 <!-- docs/_sidebar.md -->
 * [计算机网络](network/)
 * [操作系统](os/)
