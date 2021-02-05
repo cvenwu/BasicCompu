@@ -23,7 +23,7 @@
 [参考1](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array/)
 [参考2](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-array-and-slice/#323-%E8%AE%BF%E9%97%AE%E5%85%83%E7%B4%A0)
 [参考](https://zhuanlan.zhihu.com/p/341945051)
-[参考4](https://mp.weixin.qq.com/s/MTZ0C9zYsNrb8wyIm2D8BA)
+[深度解密Go语言之Slice](https://mp.weixin.qq.com/s/MTZ0C9zYsNrb8wyIm2D8BA)
 
 
 ### slice底层实现
@@ -58,6 +58,9 @@ map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](
 
 ----------
 ## channel 管道
+
+
+[参考](深度解密Go语言之channel)
 
 ### channel 有缓冲 无缓冲
 !> [参考](https://www.flysnow.org/2017/04/17/go-in-action-go-channel.html)

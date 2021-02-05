@@ -98,6 +98,7 @@
 ### 用户态和内核态
 
 ### 什么是线程安全
+[参考](https://mp.weixin.qq.com/s/WDeewsvWUEBIuabvVVhweA)
 
 ### 进程、线程究竟是由什么组成的？有哪些数据？
 
