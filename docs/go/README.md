@@ -1,9 +1,7 @@
 # Go语言相关
 
 !> **Golang**相关的面试题
-
 ## 基本数据结构
-
 ### 数组未初始化能不能求len
 !> 这里没有初始化的意思就是没有赋值
 **可以，例如 `var a [5]int` 将会赋对应类型的零值**
@@ -35,6 +33,7 @@
 
 类似问题：slice的底层原理
 类似问题：切片怎么扩容,扩容过程中需不需要重新写入
+
 ### map的底层原理
 [参考1](https://jiajunhuang.com/articles/2017_07_27-golang_map.md.html)
 [参考2](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/)
@@ -49,6 +48,7 @@ map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](
 数组，切片，映射，通道，[所有的讲解参考](https://zhuanlan.zhihu.com/p/341945051)
 
 ### Slice、map都是安全的吗
+> slice与map都不是线程安全的，
 
 ### Golang中的 map 以及 slice 的源码分析以及slice内存泄漏，需要了解什么是内存泄漏
 
@@ -58,9 +58,7 @@ map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](
 
 ----------
 ## channel 管道
-
-
-[参考](深度解密Go语言之channel)
+[参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
 
 ### channel 有缓冲 无缓冲
 !> [参考](https://www.flysnow.org/2017/04/17/go-in-action-go-channel.html)
@@ -69,32 +67,26 @@ map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](
 3. 从上面无缓冲的通道定义来看，发送goroutine和接收gouroutine必须是同步的，同时准备后，如果没有同时准备好的话，先执行的操作就会阻塞等待，直到另一个相对应的操作准备好为止。这种无缓冲的通道我们也称之为同步通道。
 4. 有缓冲通道内部有一个类似于队列机制的缓冲区，定义的时候通过make的第2个参数指定缓冲区大小，如果容量满了，接收将会阻塞，如果缓冲区空，发送将会阻塞。
 5. 如果给定了一个缓冲区容量，那么通道就是异步的，只要缓冲区有未使用空间用于发送数据，或还包含可以接收的数据，那么其通信就会无阻塞地进行
-
 类似问题： go的channel 有缓冲无缓冲如何定义，区别 
 
 ### 关闭channel读取后会怎样
 
+### golang中channel调用问题
+
+### go 同步，channel的实现
 ----------
-
-
 ## 内存泄漏
-
-
 ### goroutine内存泄漏场景
 [参考](https://blog.csdn.net/leeright/article/details/94466831)
 goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合预期的退出，直到程序结束，此goroutine才退出，这种情况就是 goroutine 泄露。
-
 ![IR4yAK](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IR4yAK.png)
 [参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
-
 
 ### go中导致内存泄漏的原因
 ![IR4yAK](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IR4yAK.png)
 [参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
 
-
 ### 了解内存泄漏吗？有什么危害？
-
 ![IR4yAK](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IR4yAK.png)
 [参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
 
@@ -106,24 +98,36 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 ### go并发为什么快
 [参考](https://zhuanlan.zhihu.com/p/111346689)
 ### go协程 java线程区别
+
 ### sync.Once的实现原理
 !>（上次哔哩哔哩面试问到了，幸亏我事后看了一眼是类似双重检验锁的实现方式哦），让我写出来，我写出了一大半，还让我运行一下，我运行不出来
+
 ### context包有没有用过，我说没用过
-###  进程，线程，协程的区别
+
 ### sync.Map 怎么解决线程安全问题？看过源码吗？
+
 ### golang 的 waitGroup 用法
+
 ### Go的协程可以不可以自己让出cpu
+
 ### Go的协程可以只挂在一个线程上面吗
+
 ### 一个协程挂起换入另外一个协程是什么过程？
-### golang中channel调用问题，
+
 ### 有一个高并发的场景该怎么处理
+
 ### golang 协程机制
+
 ### 协程的栈空间大小有限制吗？会主动扩展吗？
+
 ### golang context 应用场景
+
 ### context 的数据结构（树）
+
 ### go 协程
-### go 同步，channel的实现
+
 ### go 协程怎么切换的
+
 ### Golang 的协程与 Java 线程的区别？
 协程是轻量级线程，多个协程可以由一个或多个线程管理。
 协程无需上下文切换，没有线程之间切换的开销。
@@ -134,50 +138,66 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 「Don’t communicate by sharing memory, share memory by communicating」所以更提倡使用 channel 进行通信。
 当时答的时候也只答了 channel，面试官说还有一种，怎么都想不起来Orz。
 ###  Go里面一个协程能保证绑定在一个内核线程上面的。
+
 ### go多线程
+
 ### golang协程i/o多路复用机制
 
 ----------
 ## GMP与垃圾回收
 ### go垃圾回收
+
 ### go gmp 调度 4次
+
 ### go 垃圾回收，什么时候触发 2次
+
 ### GMP源码级别分析
+
 ### go 内存逃逸分析（分析了栈帧，讲五种例子，描述堆栈优缺点，点头）
-
-
 
 ----------
 
 ## 性能问题排查
-
 ### golang 性能问题怎么排查？（profile）
-### 项目调试（讲了下GDB）
-### gdb
-----------
-## 异常处理
-### defer recover 的问题（自己了解不多，简单介绍）
-### go defer
-### defer的执行顺序
-### defer A ; defer B ; defer panic("") A和B能不能执行到
-### defer recover panic 执行顺序
-----------
 
-## 其他问题
+### 项目调试（讲了下GDB）
+
+### gdb
+
+----------
+## 异常处理s
+### defer recover 的问题（自己了解不多，简单介绍）
+
+### go defer
+
+### defer的执行顺序
+
+### defer A ; defer B ; defer panic("") A和B能不能执行到
+
+### defer recover panic 执行顺序
+
+----------
+## go相关的其他问题
 ### go怎样实现继承
+
+### 逃逸分析讲一下
 
 ### socket
 
-### gin框架如何实现，我说用go内置的net http包实现的
-### 逃逸分析讲一下
-
 ### copy是操作符还是内置函数
+> 内置函数
+
+[其他内置函数可以参考golang包中的builtin function](https://studygolang.com/pkgdoc)
+
 ### 一道很简单的Go题目，Go怎么做深拷贝。
+1. 深拷贝（Deep Copy）：拷贝的是数据本身，创造一个样的新对象，新创建的对象与原对象不共享内存，新创建的对象在内存中开辟一个新的内存地址，新对象值修改时不会影响原对象值。既然内存地址不同，释放内存地址时，可分别释放。值类型的数据，默认全部都是深复制，Array、Int、String、Struct、Float，Bool。
+2. 浅拷贝（Shallow Copy）：拷贝的是数据地址，只复制指向的对象的指针，此时新对象和老对象指向的内存地址是一样的，新对象值修改时老对象也会变化。释放内存地址时，同时释放内存地址。引用类型的数据，默认全部都是浅复制，Slice，Map。
 
 ### golang有什么设计很巧妙的地方吗，举几个例子。
+
 ### 实现string ，拷贝构造，主要内存开辟析构（没答好)
+
 ### go语言的性能的优劣
-### 了解中间件吗?有什么好处
 
 ### Golang 的默认参数传递方式以及哪些是引用传递？
 默认采用值传递，且Go 中函数传参仅有值传递一种方式。
@@ -185,12 +205,15 @@ slice、map、channel 都是引用类型。
 slice 能够通过函数传参后，修改对应的数组值，因为 slice 内部保存了引用数组的指针，并不是因为引用传递。
 这题回答的时候以为有引用传递，答了 slice、map、channel 都是引用传递，结果一百度，发现是用起来像引用传递，其实都是值传递，就像 slice 传递的是指针的复制。
 
-
-
-### etcd 原理（讲了下raft协议）
-
 ### go相关知识点（内存分配、go优缺点、go错误处理有什么优缺点）
 一个GO源码级别的仓库讲解：https://github.com/bereborn/learn/blob/master/go/go%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D.c
+--------------
+## 框架问题
 
+### gin框架如何实现，我说用go内置的net http包实现的
+
+### 了解中间件吗?有什么好处
+
+### etcd 原理（讲了下raft协议）
 
 ### RPC

@@ -347,6 +347,10 @@ WWW-Authenticate	表明客户端请求实体应该使用的授权方案	WWW-Auth
 
 ### HTTP1.x 和 HTTP2.0 的区别
 
+![IMG_0389](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/IMG_0389.PNG)
+
+同时参考自己看Bilibili陶辉老师讲解的视频之后自己总结的笔记
+
 ### HTTP 缓存（强制缓存、协商缓存）
 https://juejin.cn/post/6844903763665240072#heading-0
 https://www.cnblogs.com/tugenhua0707/p/10807289.html
