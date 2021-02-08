@@ -59,6 +59,7 @@ map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](
 ----------
 ## channel 管道
 [参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
+channel是线程安全的
 
 ### channel 有缓冲 无缓冲
 !> [参考](https://www.flysnow.org/2017/04/17/go-in-action-go-channel.html)
