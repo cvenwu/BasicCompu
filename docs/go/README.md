@@ -1,6 +1,10 @@
 # Go语言相关
 
 !> **Golang**相关的面试题
+
+
+[参考](https://github.com/KeKe-Li/data-structures-questions/blob/master/src/chapter05/golang.01.md#Go%E4%B8%AD%E5%AF%B9nil%E7%9A%84Slice%E5%92%8C%E7%A9%BASlice%E7%9A%84%E5%A4%84%E7%90%86%E6%98%AF%E4%B8%80%E8%87%B4%E7%9A%84%E5%90%97)
+
 ## 基本数据结构
 ### 数组未初始化能不能求len
 !> 这里没有初始化的意思就是没有赋值
@@ -96,12 +100,22 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 
 ----------
 ## 协程与并发
+
+### Golang中哪些方式可以安全读写共享变量
+1. 加互斥锁或读写锁
+2. 使用channel进行安全读写共享变量 [参考](https://studygolang.com/articles/17835?fr=sidebar)
+3. 使用原子性操作
+[参考](https://www.bilibili.com/read/cv5694992/)
+
 ### go并发为什么快
 [参考](https://zhuanlan.zhihu.com/p/111346689)
+
 ### go协程 java线程区别
 
 ### sync.Once的实现原理
 !>（上次哔哩哔哩面试问到了，幸亏我事后看了一眼是类似双重检验锁的实现方式哦），让我写出来，我写出了一大半，还让我运行一下，我运行不出来
+
+1. [参考](https://mp.weixin.qq.com/s/gT9bNsNhU189PsURJyzsmQ)
 
 ### context包有没有用过，我说没用过
 
@@ -179,6 +193,8 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 
 ----------
 ## go相关的其他问题
+
+
 ### go怎样实现继承
 
 ### 逃逸分析讲一下

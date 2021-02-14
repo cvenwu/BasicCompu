@@ -158,9 +158,37 @@ time_wait是主动断开连接的乙方
 ### 服务端出现大量close_wait原因（主子进程共享socket，close不能完全关闭）
 ![bNaabs](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/bNaabs.png)
 
+
+### TCP 协议了解吗，你给我讲一下三次握手的过程吧
+
+### 那为什么它们的 seq 需要不同的 seq 呢，我可以直接在 seq 上加个 1，把收到的 seq 置为相同的不久行了吗，为什么我服务器端要单独发送自己的 seq 呢
+
+### 为什么建立连接需要三次握手，断开连接需要四次挥手
+
+### 为什么会有一个半关闭的状态，明明客户端已经要求断开连接了呀，你还向客户端发送报 （不知道，瞎猜数据没传输完）
+
+### 这个数据没传输完指的什么，客户端请求断开连接的时候数据没有传输完吗，谁的数据没 有传输完（尴尬了 2 分多钟）
+
+### TCP 连接他有一个四元组知道吧
+
+### TCP 三次握手可以携带数据吗？为什么？
+
+### TCP 和 UDP 的区别？
+
+### TCP 和 UDP 稳定性方面的差别?
+
+### TCP 为什么要四次挥手？
+
 ---------
 
 ## Http和Https
+
+
+### 了解 https 吗？
+
+### ssl 的具体流程
+
+### 对称密钥为什么速度快（没答上来）
 
 ### HTTP状态码
 1. [官方网站](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
@@ -380,6 +408,18 @@ https://www.bilibili.com/video/BV11a4y1H7WF?from=search&seid=84378165225275780
 ### 浏览器刷新界面，服务器如何区分两次相同的请求
 我回答的是cookie和session，他说不是这意思，就是从客户端发回来的字节中怎么区分？
 
+
+### http 协议了解吧，session 和 cookie 有什么区别
+
+### 301，302 有什么区别
+
+
+### url 访问过程
+后面的问题：域名解析~呜呜
+
+### HTTP 和 HTTPS 的区别，CA 证书，数字签名，SSL 层握手过程，RSA。
+
+
 ---------
 
 ## 其他问题
@@ -413,3 +453,7 @@ DNS 是域名系统，通常用来解析域名为 IP 地址。
 1. DNS的工作流程
 
 ![X6HxO2](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/X6HxO2.png)
+
+### ICMP 这个协议他位于网络的第几层知道吧
+
+### 那链路层的协议有哪些啊
