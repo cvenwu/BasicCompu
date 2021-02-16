@@ -14,6 +14,8 @@
 !> 可以，未初始化只是一个为长度和容量都为0的一个切片，使用append将会触发扩容机制
 注意：切片未只是声明并未初始化，如`var a []int`，相当于一个nil，可以直接append进行追加元素，将会触发扩容
 
+
+
 ### go数组和slice的区别
 1. 数组定长，定义的时候就需要确定。切片长度不定，append时会自动扩容
 2. 相同大小数组可以赋值，会拷贝全部内容。slice赋值和指针一样。数组和slice之间不能相互赋值。当然slice有自己的copy函数
@@ -27,6 +29,61 @@
 [参考](https://zhuanlan.zhihu.com/p/341945051)
 [深度解密Go语言之Slice](https://mp.weixin.qq.com/s/MTZ0C9zYsNrb8wyIm2D8BA)
 
+
+### nil slice 和 empty slice区别
+
+> empty slice用法：当我们查询或者处理一个空的列表的时候，这非常有用，它会告诉我们返回的是一个列表，但是列表内没有任何值。
+
+1. **当我们使用json序列化nil slice的时候将会序列化成null，但是序列化empty slice的时候将会序列化后才能一个[]**
+2. 总之，nil slice 和 empty slice是不同的东西,需要我们加以区分的.
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+/**
+ * @Author: yirufeng
+ * @Date: 2021/2/16 8:46 上午
+ * @Desc:
+
+empty slice用法：当我们查询或者处理一个空的列表的时候，这非常有用，它会告诉我们返回的是一个列表，但是列表内没有任何值。
+
+ **/
+
+type Student struct {
+	Id   []int
+	Name string
+}
+
+func main() {
+	var a []int
+	b := []int{}
+	aByte, _ := json.Marshal(a)
+	fmt.Println(string(aByte)) //null
+	bByte, _ := json.Marshal(b)
+	fmt.Println(string(bByte)) //[]
+
+	c := Student{
+		Name: "123",
+	}
+
+	d := Student{
+		Id:   []int{},
+		Name: "123",
+	}
+
+	cByte, _ := json.Marshal(c)
+	fmt.Println(string(cByte)) //{"Id":null,"Name":"123"}
+
+	dByte, _ := json.Marshal(d)
+	fmt.Println(string(dByte)) //{"Id":[],"Name":"123"}
+}
+
+```
 
 ### slice底层实现
 [参考1](https://jiajunhuang.com/articles/2020_05_23-go_slice.md.html)

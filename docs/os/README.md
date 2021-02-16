@@ -19,9 +19,56 @@
 [参考](https://mp.weixin.qq.com/s/_XPzjzM6Tp1KoeYJBOOTCg)
 [参考2](https://www.cnblogs.com/wangtong111/p/11213299.html)
 [参考3](https://zhuanlan.zhihu.com/p/345412382)
-[参考4](https://www.bilibili.com/video/BV1H541187UH?from=search&seid=18006703396903851168)
+[参考4](https://www.bilibili.com/video/BV1H541187UH?from=search&seid=18006703396903851168) 
 [参考5](https://zhuanlan.zhihu.com/p/260830550)
 
+
+
+
+|   |  进程   |  线程   |  协程   |
+| :--: | :--: | :--: | :--: |
+|   |   |   |   |
+|      |      |      |      |
+|      |      |      |      |
+
+
+上面的参考4做的笔记：
+每个进程都有自己的虚拟地址空间，但是为了进一步保障系统运行安全，虚拟地址空间被划分为用户空间和内核空间，操作系统运行在内核空间，用户程序运行在用户空间，内核空间由所有进程的地址空间共享（所有进程的内核空间（3G－4G）都是共享的  属于所有进程。内核层共享，只是为了提供内核应该提供的访问接口。这样应用程序才能通过这些空间来和内核交互，以及调用其他功能和访问硬件。），但是用户程序不能直接访问内核空间，操作系统保存的进程控制信息自然是在内核空间，这里除了页目录以外还能找到很多重要的内容，例如进程和父进程ID，状态，打开文件句柄表等等
+
+
+线程就是进程中的执行体，它要有指定的执行入口，通常是某个函数的指令入口，线程执行时要使用从进程虚拟地址空间中分配的栈空间来存储数据，这被称为线程栈，在创建线程时， 操作系统会在用户空间和内核空间分别分配两段栈，就是我们通常所说的用户栈和内核栈，线程切换到内核态执行时会使用内核栈，为的是不允许用户代码对其进行修改以保证安全，操作系统也会记录每个线程的控制信息（例如执行入口，线程栈，线程id），windows中线程控制信息对应TCB，在PCB中可以找到进程拥有的线程列表，同一个进程内的线程会共享进程的地址空间和句柄表等资源，而在linux中只使用了一个task_struct结构体，进程在创建子进程时会指定它和自己使用同一套地址空间和句柄表等资源，用这种方法来实现多线程的效果，
+
+
+![jDend6](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/jDend6.png) -> ![OBSUxB](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/OBSUxB.png) -> ![fxNsLb](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/fxNsLb.png) -> ![BjNBU7](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/BjNBU7.png) -> ![4K7g2Y](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/4K7g2Y.png) -> ![rpFLY1](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/rpFLY1.png) -> ![z5MU89](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/z5MU89.png)
+
+
+如果接下来要执行进程A中的线程a1，执行入口如图所示在那里，cpu的指令指针就会指向线程的执行入口，当前执行用户空间的程序指令，所以栈基和栈指针寄存器会记录用户栈的位置，可以看到程序执行时，cpu面向的是某个线程，所以才说线程是操作系统调度和执行的基本单位，一个进程中至少要有一个线程，它要从这个线程开始执行，这被称为它的主线程，可以认为主线程是进程中的第一个线程，一般是由父进程或者操作系统创建的，而进程中的其他线程，一般都是由主线程创建的，线程中发生函数调用时就会在线程栈中分配函数调用栈，而虚拟内存分配，文件操作，网络读写等很多功能，都是由操作系统来实现，再向用户程序暴露接口，所以，线程免不了要调用os提供的系统服务，也就是少不了进行系统调用，cpu中会有一个特权级标志，用户记录当前程序是在用户态还是内核态，只有标记为内核态时才可以访问内核空间，而目前线程a1处于用户态，还不能访问内核空间，所以系统调用发生时就得切换到内核态，使用线程的内核栈，执行内核空间的系统函数，这被称为从"用户态"切换到"内核态"。最初系统调用是通过软中断触发的，所谓软中断，就是通过指令模拟中断，与软中断对应的是硬件中断，操作系统会按照cpu硬件要求，在内存里存一张中断向量表，用来把各个中断编号映射到相应的处理程序，例如Linux系统中，系统调用中断对应的编号为0x80，对应的处理程序就是用来派发系统调用的，为什么说派发系统调用呢？因为操作系统提供了数百个系统调用，不能为每一个都分配一个中断号，所以操作系统又实现了一张系统调用表，用于通过系统调用编号，找到对应的系统函数入口，所以用户程序这里，会把要调用的系统函数编号存入特定寄存器，通过寄存器或用户栈来传递其他所需参数，然后用int 0x80来触发系统调用中断，而硬件层面，CPU有一个中断控制器，它负责接收中断信号，切换到内核态，保存用户态执行现场，一部分寄存器的值会通过硬件机制保存起来，还有一部分通用寄存器的值，被压入内核栈中，然后去中断向量表这里查询0x80对应的系统调用派发程序入口，而系统调用的派发程序会根据指定的系统调用编号，去系统调用表这里查询对应的系统调用入口并执行，后来为了优化系统调用的性能，改为通过特殊指令触发系统调用，例如x86的sysenter，和amd64平台下的syscall，当cpu执行到这些指令时就会陷入内核态，从专用寄存器拿到派发入口的地址，省去了查询中断向量表的过程，等系统调用结束后，再利用之前保存的信息，恢复现场在用户态的执行现场，继续执行后面的指令，这样就完成了一次系统调用。ok，对线程的调用有一个大致了解。
+
+![EOZqYs](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/EOZqYs.png)
+
+接下来就可以看看线程切换是怎么回事了？
+我们知道现代操作系统中，cpu的执行权被划分为不同的时间片，只有获得cpu时间片的程序才可以运行，由于时间片很短，所以用户感觉不到程序的切换过程，又因为cpu很快，所以即使很短的时间片，也足够它执行很多很多的指令，一个线程获得的时间片用完时，cpu硬件时钟会触发一次时钟中断，对应的中断处理程序，会从已经就绪的线程中挑选一个来执行，我们暂不展开线程调度的问题，只关注切换过程。
+例如接下来要从线程a1切换到线程a2，这两个线程同属于进程A，那么这就涉及到线程切换，![ZGnbNl](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/ZGnbNl.png) 
+只需要把线程a1的执行现场保存起来，后续再把指令指针，栈指针这些寄存器的值，修改为线程a2的信息，修改一下内存中调度相关的数据结构，一次同进程间的线程切换就算完成了。
+
+![MAiBJ8](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/MAiBJ8.png) -> ![64R8Kv](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/64R8Kv.png)
+
+等到线程a1再次获得时间片之后，会根据之前保存的信息，恢复到切换前的执行现场，继续完成它的任务，假如线程a1要切换到另一个进程B的线程b1，那么除了线程切换外还有涉及到进程切换，cpu这里保存的页目录地址要切换到进程B，所以进程切换与线程切换的区别就是进程切换会导致地址空间等进程资源发生变化，会导致TLB缓存失效，代价相应的会更大。
+![WKJXR1](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/WKJXR1.png) -> ![6dCq7x](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/6dCq7x.png)
+
+
+到目前为止，我们已经了解了进程和线程的结构，(如下图所示)
+![Eqwwvs](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/Eqwwvs.png)
+理解了线程的用户栈和内核栈，(如下图所示)
+![S0d8KU](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/S0d8KU.png)
+
+以及进程切换与线程切换的大致过程，(如下图所示)
+![WKJXR1](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/WKJXR1.png) -> ![6dCq7x](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/6dCq7x.png)
+
+不过时间片轮转也只是触发进程或线程切换的多种场景之一，
+
+
+![6ZmMEq](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/6ZmMEq.png)
 
 ### 进程与线程区别
 1. 进程是资源分配的基本单位，线程是独立运行和独立调度的基本单位(CPU上真正运行的是线程)
