@@ -1,7 +1,5 @@
 # Go语言相关
-
 !> **Golang**相关的面试题
-
 
 [参考](https://github.com/KeKe-Li/data-structures-questions/blob/master/src/chapter05/golang.01.md#Go%E4%B8%AD%E5%AF%B9nil%E7%9A%84Slice%E5%92%8C%E7%A9%BASlice%E7%9A%84%E5%A4%84%E7%90%86%E6%98%AF%E4%B8%80%E8%87%B4%E7%9A%84%E5%90%97)
 
@@ -109,7 +107,7 @@ map不是线程安全的，需要使用sync.Map，可以看[该文章的最后](
 数组，切片，映射，通道，[所有的讲解参考](https://zhuanlan.zhihu.com/p/341945051)
 
 ### Slice、map都是安全的吗
-> slice与map都不是线程安全的，
+> slice与map都不是线程安全的
 
 ### Golang中的 map 以及 slice 的源码分析以及slice内存泄漏，需要了解什么是内存泄漏
 
@@ -153,7 +151,7 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 [参考](https://mp.weixin.qq.com/s/90Evbi5F5sA1IM5Ya5Tp8w)
 
 ### go 内存分配
-
+[参考](https://github.com/KeKe-Li/data-structures-questions)
 
 ----------
 ## 协程与并发
@@ -209,7 +207,7 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 共享内存和协程通信。
 「Don’t communicate by sharing memory, share memory by communicating」所以更提倡使用 channel 进行通信。
 当时答的时候也只答了 channel，面试官说还有一种，怎么都想不起来Orz。
-###  Go里面一个协程能保证绑定在一个内核线程上面的。
+### Go里面一个协程能保证绑定在一个内核线程上面的。
 
 ### go多线程
 
@@ -237,7 +235,7 @@ goroutine泄漏描述：如果你启动了一个 goroutine，但并没有符合�
 ### gdb
 
 ----------
-## 异常处理s
+## 异常处理
 ### defer recover 的问题（自己了解不多，简单介绍）
 
 ### go defer
@@ -291,3 +289,15 @@ slice 能够通过函数传参后，修改对应的数组值，因为 slice 内�
 ### etcd 原理（讲了下raft协议）
 
 ### RPC
+
+
+-------------
+
+
+## 为什么要使用 Go 语言？Go 语言的优势在哪里？
+> 从自己理解的角度看
+
+1. 代码简单，只有25个关键字，例如每个语句最后不需要加上分号
+2. 跨平台编译，如果你写的Go代码不包含cgo，那么就可以做到window系统编译linux的应用，如何做到的呢？Go引用了plan9的代码，这就是不依赖系统的信息。
+3. 便于部署：指定编译的平台架构以及运行的平台就可以生成对应的二进制文件
+4. 可以支持很大量的并发，因为goroutine占用的内存很小。Go语言的运行环境（runtime）会在goroutine需要的时候动态地分配栈空间，而不是给每个goroutine分配固定大小的内存空间。这样就避免了需要程序员来决定栈的大小。分块式的栈是最初Go语言组织栈的方式。当创建一个goroutine的时候，它会分配一个8KB的内存空间来给goroutine的栈使用。我们可能会考虑当这8KB的栈空间被用完的时候该怎么办?已经用完了分配的栈空间。如果是的话，它会调用morestack函数
