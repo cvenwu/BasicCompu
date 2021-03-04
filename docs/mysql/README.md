@@ -273,8 +273,6 @@ b 和 b+区别
 
 ### 索引是如何实现的？多种引擎的实现区别？聚族索引，非聚族索引，二级索引，唯一索引、最左匹配原则等等（非常重要）
 
-
-
 ------------
 ## 锁
 ### mysql的锁类型
@@ -328,7 +326,6 @@ begin; select * from user where age=20 for update; begin; insert into user(age) 
 ### mysql的存储引擎
 
 ------------
-
 ## 设计
 ### 数据表设计遵循的原则
 
@@ -345,9 +342,7 @@ begin; select * from user where age=20 for update; begin; insert into user(age) 
 ### 数据库表是如何设计的
 
 ------------
-
 ## 其他问题
-
 ### 数据库完整性的实现
 ### 主键
 ### 介绍mysql
@@ -365,41 +360,19 @@ begin; select * from user where age=20 for update; begin; insert into user(age) 
 ### sql语句：查询所有课程分数都大于或等于80分的学生姓名
 ### 写个sql语句，两张表，学生表，学生课程表，求平均分大于85的学生的姓名
 ### sql语句：表【学生|科目|成绩】查询每个学生成绩最好的科目和成绩 ( 没完全写出来
-
-
 ### mysql 和 mongodb 的区别，什么时候用 mysql，什么时候用 mongo（因为简历上 有写 mongodb）
-
-
-
 ### 给定一张表 user(id,name,age)
-
 有这样一个查询
-
 select id,name,age where name=....
-
 如何建立索引，并且使用到覆盖索引
-
 ### 一个教务系统，包括学生信息，课程信息，考试安排，成绩查询，绩点分析，你来设 计数据库表应该怎么设计？
-
 用你刚刚设计的表来给我查询出全校所有高数在 85 分一以上的人的名字
-
-
 ### char 和 varchar
-
-SQL：userId(主播 Id) de..Id(设备 Id)，怎么实现对主播与主播之间的重合数（共同关注
-
-数）
-
+SQL：userId(主播 Id) de..Id(设备 Id)，怎么实现对主播与主播之间的重合数（共同关注数）
 ### SQL，一个表 User，字段 userid，username，city 查询用户数量最多的三个城市。
-
 ### MySQL 的自增主键和随机生成主键的区别，为什么自增主键效率高。
-
 ### 如何查看数据库表结构？
-
 ### 如何提高 SQL 查询效率，在语句方面上的优化？
-
 ### 一条 sql 语句是如何执行的？进行更新时又是怎么处理的？
-
-### 志相关：redolog，binlog，undolog，这些日志的实现原理，为了解决怎么问题？日志也是非常重要的吧，面试也问的挺多。
-
+### 日志相关：redolog，binlog，undolog，这些日志的实现原理，为了解决怎么问题？日志也是非常重要的吧，面试也问的挺多。
 ### 数据库的主从备份、如何保证数据不丢失、如何保证高可用等等。
