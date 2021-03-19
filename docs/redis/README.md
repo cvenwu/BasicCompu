@@ -27,6 +27,19 @@
 2. redis源码
 
 ## redis内存淘汰机制
+
+eviction是驱逐的意思。volatile
+1. noeviction：当内存使用超过配置的时候会返回错误，不会驱逐任何键。
+2. allkeys-lru：加入键的时候，如果过限，首先通过LRU算法驱逐最久没有使用的键
+3. volatile-lru：加入键的时候如果过限，首先从设置了过期时间的键集合中驱逐最久没有使用的键
+4. allkeys-random：加入键的时候如果过限，从所有key随机删除
+5. volatile-random：加入键的时候如果过限，从过期键的集合中随机驱逐
+6. volatile-ttl：从配置了过期时间的键中驱逐马上就要过期的键
+7. volatile-lfu：从所有配置了过期时间的键中驱逐使用频率最少的键
+8. allkeys-lfu：从所有键中驱逐使用频率最少的键
+
+
+类似问题：redis数据淘汰机制
 > 为什么手动淘汰 Redis 中的数据，不使用 Redis 的内存淘汰机制？
 > 因为 Redis 的内存淘汰机制是对 Key 值进行筛选，而红包池的机制是对 Value 值的筛选。面试官提及了内存淘汰机制，应该主动告诉面试官自己知道 Redis 的内存淘汰机制！
 
@@ -124,5 +137,4 @@ redis4.0 引入了volatile-lfu和allkeys-lfu淘汰策略，将访问频率最少
 
 ## redis线程模型
 
-## redis数据淘汰机制
 

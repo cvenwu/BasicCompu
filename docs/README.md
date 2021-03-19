@@ -11,6 +11,9 @@ mysql就索引 优化 事务 高可用 redo undo binlog这些
 redis就数据结构 单线程 高可用 缓存应用
 哦对你面头条的话 可能会让你手写lru lfu
 
+5种io模型（同步阻塞，同步非阻塞，IO多路复用，信号驱动IO，异步IO），然后select, poll，以及epoll都是多路复用，然后一步一步从我们的select，poll，谈到epoll
+golang里面的io模型是什么样的
+
 [Go语言学习路线图](https://codechina.gitcode.host/developer-roadmap/go/intro/)
 ## 面试的流程
 1. 面试官自我介绍
@@ -168,6 +171,7 @@ redis就数据结构 单线程 高可用 缓存应用
 3. 公司的企业文化是怎样的？以及公司会更期望什么样的人加入团队？
 4. 要问HR能回答你的东西，而且原则上也要让HR感受到你的面试诚意。
 5. 想问下您觉得我在应聘该岗位上还有那些能力上的欠缺。
+6. 转正是怎么弄的呢
 
 
 ### leader
