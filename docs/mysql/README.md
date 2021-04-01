@@ -138,6 +138,9 @@ InnoDB采用的MVCC实现方式是：在需要时，通过undo日志构造出历
 ------------
 ## 索引
 
+
+[参考](https://juejin.cn/post/6942777635579625503)
+
 [参考](https://mp.weixin.qq.com/s?__biz=MzUxNTQyOTIxNA==&mid=2247484041&idx=1&sn=76d3bf1772f9e3c796ad3d8a089220fa&chksm=f9b784b8cec00dae3d52318f6cb2bdee39ad975bf79469b72a499ceca1c5d57db5cbbef914ea&token=2025456560&lang=zh_CN#rd)
 
 ### 索引的结构以及概念
@@ -170,6 +173,20 @@ B+ 树中，数据对象的插入和删除仅在叶节点上进行。
 B+树有2个头指针，一个是树的根节点，一个是最小关键码的叶节点。
 3. 哈希索引：简要说下，类似于数据结构中简单实现的HASH表（散列表）一样，当我们在mysql中用哈希索引时，主要就是通过Hash算法（常见的Hash算法有直接定址法、平方取中法、折叠法、除数取余法、随机数法），将数据库字段数据转换成定长的Hash值，与这条数据的行指针一并存入Hash表的对应位置；如果发生Hash碰撞（两个不同关键字的Hash值相同），则在对应Hash键下以链表形式存储。当然这只是简略模拟图。
 
+
+别人的：
+这个问题会涉及到mysql的存储数据结构，B+tree
+多叉搜索树，有序，类似二叉搜索树(特性:中序遍历是有序的);curd的时间复杂度都是logN;
+再谈谈mysql的索引结构，innodb引擎中分主键(聚簇索引)索引树和二级索引树;
+Innodb的主键索引树的叶子节点上存储行数据，非叶子结点只存储主键id，简单讲就是聚簇索引相当于物理内存地址(一级指针)，查询快;
+而二级索引树的每个节点只会存储索引字段值和主键id;
+2种索引查询对比:
+主键索引树:主键id=>叶子结点row数据
+二级索引树: 二级索引树上找到对应的id=>主键索引树上的id=>主键索引树上的叶子结点行记录
+
+上面“二级索引树=>主键索引树”的过程叫做“回表”，可以通过“索引覆盖”，“索引下推”优化
+
+个人总结，可能不准确的地方
 ### 数据库中数据很多的时候如何处理？面试官提示了索引
 
 ### 索引越多越好么？
@@ -383,8 +400,55 @@ SQL：userId(主播 Id) de..Id(设备 Id)，怎么实现对主播与主播之间
 ### 如何提高 SQL 查询效率，在语句方面上的优化？
 ### 一条 sql 语句是如何执行的？进行更新时又是怎么处理的？
 ### 日志相关：redolog，binlog，undolog，这些日志的实现原理，为了解决怎么问题？日志也是非常重要的吧，面试也问的挺多。
+redolog 用于日志重放，宕机时，可以保证数据未提交的数据，正常提交
+undolog  用于 mvccc ，事务回滚
+binlog 是 server 层的，其它两个是引擎层的.binlog同步和恢复数据，
+
+
+日志只要看这3篇文章就可以了：
+1. https://mp.weixin.qq.com/s/zjtYYPbBNuhgAHtf1zxFrQ
+2. https://mp.weixin.qq.com/s/Eb95fGhyvLThOF9uhQYVDg
+3. https://mp.weixin.qq.com/s/rmQYMGfgyfLlo69l6SBbLQ
+
+[redolog,binlog,undolog](https://juejin.cn/post/6941988998038421518?utm_source=gold_browser_extension)
+
+b站的表同步好像就是订阅的binlog
+undo原子性，redo持久性
+![Vs9wv3c7HbAqajP](https://i.loli.net/2021/03/24/Vs9wv3c7HbAqajP.png)
+
+
+mvcc只有RC 和  RR级别有
+读提交和可重复读是 mvcc
+RR级别通过  Next-Key锁防止幻读
+
+大家一般用哪个级别？我看互联网都是RC
+并发量大的用RC
+
+![OrJxSocG74IfqzW](https://i.loli.net/2021/03/24/OrJxSocG74IfqzW.png)
+
+RR通过Next-key锁解决幻读
+![bosXwVDyOLq7MUK](https://i.loli.net/2021/03/24/bosXwVDyOLq7MUK.png)
+
+RR有next-key lock解决了幻读 = RR没幻读 
+next-key lock 是 行锁 + 间隙锁
+![R42PgZiXnCBEhcO](https://i.loli.net/2021/03/24/R42PgZiXnCBEhcO.png)
+![odDUzTrCpuBPIgv](https://i.loli.net/2021/03/24/odDUzTrCpuBPIgv.png)
+![8fFxAwiCnBrlXW5](https://i.loli.net/2021/03/24/8fFxAwiCnBrlXW5.png)
+RR下会产生幻读 但是 InnoDB和XtraDB通过MVCC解决幻读了
+MVCC是解决不可重复读
+
+
+![GckayhpHrtlz2sm](https://i.loli.net/2021/03/24/GckayhpHrtlz2sm.png)
 ### 数据库的主从备份、如何保证数据不丢失、如何保证高可用等等。
 
 ## 如何保证多个服务器的数据一致性
-
+我能想到的思路是从分布式出发
+1.先从 cap 理论将其
+2.然后从常用的 mysql 的主从同步是最终一致性将其
+3.可以的话从服务发现分析（go的etcd,consult，还有常用的zk）
+4.从业务场景出发，是保证强一致性（秒杀业务），还是最终一致性（实时性要求不高的业务）
 ## 建立一张数据库表需要考虑哪些因素，索引的底层实现，是否了解过b+树之外的索引结构。
+
+
+
+

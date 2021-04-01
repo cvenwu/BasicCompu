@@ -286,6 +286,22 @@ WWW-Authenticate	表明客户端请求实体应该使用的授权方案	WWW-Auth
 
 ### http1.0 http1.1 http2.0 http3.0各自的优缺点
 
+通过http header中的connection字段，如果字段的值是一个closed表明是一个短链接，所有的服务器都会决定，短连接将会在发完response就会关闭连接了。 
+
+如果是长连接将会是**connection: keep-alive**
+
+
+http1.1 长连接的好处：
+1. 减少TCP重复建立以及关闭的开销，减少握手次数
+2. 减少慢启动的影响。
+3. http1.1会遇到的问题：队头组死啊
+
+
+队头阻塞：http是基于tcp的，tcp是字符流协议（就是传文件，必须要从头传到尾，但是不能乱），如果一个长连接上传输一个文件是没有问题的，但是一个长连接上传输多个请求，这些请求就会出现串行请求，也就是第一个请求没有传输完成无法开始传输第二个，串行的情况下tcp有一个问题叫**队头阻塞（如果这道题回答道对头阻塞应该就不会延展了）**，只要有一个报文丢包了，后面的即使你传输过去了对方的应用层也不可以接收。
+
+
+![http2与http1的区别](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/http2%E4%B8%8Ehttp1%E7%9A%84%E5%8C%BA%E5%88%AB.PNG)
+
 [参考](https://zhuanlan.zhihu.com/p/266578819)
 参考小林图解网络
 #### http1.0 ：
@@ -449,6 +465,7 @@ https://www.bilibili.com/video/BV11a4y1H7WF?from=search&seid=84378165225275780
 
 ### 服务器server怎么把cookie设置到浏览器的
 参考cyc2018基础知识面试中的cookie
+![glPGxg](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/glPGxg.png)
 
 ### cookie传输
 

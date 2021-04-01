@@ -51,9 +51,16 @@ eviction是驱逐的意思。volatile
 6. volatile-ttl：当内存不足以容纳新写入数据时，在设置了过期时间的键空间中，有更早过期时间的 key 优先移除
 
 redis4.0 引入了volatile-lfu和allkeys-lfu淘汰策略，将访问频率最少的键值对淘汰
-
-
 ![znfHJ6](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/znfHJ6.png)
+## redis内存满了怎么办
+
+1. 修改配置文件
+2. 根据redis内存淘汰机制进行缓存淘汰
+3. 集群分片存储
+
+## redis未设置过期时间会怎么样
+内存满的时候只会根据redis内存淘汰机制进行淘汰，如果淘汰之后依然是满的将会拒绝写入。
+
 
 ## 同时对Redis和数据库进行内存更新的时候，如何保证操作的成功 / Redis更新后线程挂掉了怎么办？
 1. [参考](https://blog.csdn.net/qq32933432/article/details/108690254)
@@ -93,7 +100,7 @@ redis4.0 引入了volatile-lfu和allkeys-lfu淘汰策略，将访问频率最少
 缓存雪崩描述：大量的redis缓存在同一时间内过期，导致请求直接打到数据库上造成数据库崩溃
 [参考](https://www.bilibili.com/video/BV1f5411b7ux?from=search&seid=16353605540017451556)
 
-
+![O2ktOo](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/O2ktOo.png)
 解决方案：
 1. 设置缓存的失效时间，让缓存不要同一时间失效，我们设置缓存的时候可以随机初始化它的失效时间
 2. redis一般都是集群部署，我们把热点的key放到不同的节点上去，让这些热点的缓存，平均分到不同节点上
