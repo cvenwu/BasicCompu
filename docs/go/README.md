@@ -47,7 +47,6 @@ import (
  * @Desc:
 
 empty slice用法：当我们查询或者处理一个空的列表的时候，这非常有用，它会告诉我们返回的是一个列表，但是列表内没有任何值。
-
  **/
 
 type Student struct {
@@ -290,7 +289,40 @@ slice 能够通过函数传参后，修改对应的数组值，因为 slice 内�
 -------------
 
 ## new 和 make区别
+
+Golang 语言中的内置函数 make 和 new 都是用作变量初始化，但是它们初始化变量的方式不同。关于它们之间的区别，我们可以简述为 make 返回类型是引用类型，new 返回类型是指针类型。本文我们首先分别介绍二者，然后再介绍二者的区别。
+02
+内置函数 make
+关于内置函数 make，官方的介绍是 make 内置函数仅用作分配内存空间并初始化 slice，map 和 chan 类型的对象。与 new 相同，第一个参数是类型，而不是值。与 new 不同，make 的返回类型与其参数的类型相同，而不是指向它的指针。
+func make(t Type, size ...IntegerType) Type
+返回值取决于传参的类型：
+Slice
+s := make([]T, 0, 10)
+以上示例代码表示分配一个长度为 10 的底层数组，返回一个长度为 0，容量为 10 的切片。
+使用内置函数 make 初始化 slice，第一个参数是类型，第二个参数是 slice 的长度，第三个参数是可选参数，它代表 slice 的容量，如果不传入第三个参数，slice 的容量与长度相同，但是如果传入第三个参数，它的值（容量）比如大于或等于传入的第二个参数（长度）。
+Map
+m := make(map[T]T)
+以上示例代码表示给 map 分配内存空间。
+使用内置函数 make 初始化 map，传入的参数是类型，map 没有容量限制，初始化时无需指定容量的大小。
+Channel
+c := make(chan T, 10)
+以上示例代码表示给 channel 分配的内存空间大小（缓冲容量）为 10。channel 的缓冲区使用指定的值初始化缓冲容量。如果为零或忽略大小(不传入第二个参数)，则 channel 为无缓冲的。
+03
+内置函数 new
+关于内置函数 new，官方介绍是内置函数 new 仅用作分配内存空间，第一个参数是类型，而不是值，返回值是指向新分配该类型的零值的指针。
+func new(Type) *Type
+在 Golang 开发中，通常不太常用内置函数 new，它的使用场景一般是需要显式返回指针。
+04
+make 和 new 的区别
+在阅读完上述内容后，我相信读者朋友们应该已经了解了二者的区别。
+make 仅用于初始化 slice，map 和 chan，new 可用于初始化任意类型。
+make 返回值是”引用类型“，new 返回值是指针类型。
+05
+总结
+本文我们介绍了内置函数 make 和 new，并且对比归纳了二者的区别，在 Golang 开发中，内置函数 make 是必用的，因为 slice，map 和 chan，必须使用内置函数 make 初始化，才可以使用；而内置函数 new 并不常用，通常使用场景是需要显式返回指针。
+
 [参考](https://www.kancloud.cn/aceld/golang/1958307)
+
 
 
 ## 为什么要使用 Go 语言？Go 语言的优势在哪里？
@@ -313,3 +345,25 @@ cyan：
 2. 要想着检测到泄露要如何优雅地关闭goroutine。
 3. goroutine的量是否可控 ，这里推荐下潘少的
 https://github.com/panjf2000/ants，感兴趣的同学也可以看看其他goroutine pool https://awesome-go.com/#goroutines
+
+
+## go语言中的坑 （泫提出的）
+![1QuwdT](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/1QuwdT.png)
+还有个坑是 
+type Node struct{
+ Val int
+}
+var test map[string]Node
+
+test["a"] 拿到的Node是不能修改的
+即test["a"].Val = 1
+会报错
+正确的写法是 var test map[string]*Node
+
+
+
+gc 算法
+
+
+
+深拷贝，浅拷贝
