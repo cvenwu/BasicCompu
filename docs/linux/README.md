@@ -34,4 +34,18 @@ linuxIO 模型，区别在哪
 
 如何探查 CPU 负载情况
 
+指令：top或者uptime
+
+系统平均负载：![T34wvd](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/T34wvd.png)
+uptime：系统当前时间，系统运行时间，当前登录用户数，系统负载（1分钟，5分钟，15分钟）
+
+
+系统负载升高原因：![WeOT72](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/WeOT72.png)
+1. IO密集型
+2. CPU密集型
+3. 大量等待调度的进程
+
+
+top命令查看：https://jingyan.baidu.com/article/ca00d56cbbdf27a99eebcf94.html
+
 在什么时候 CPU 被认为是繁忙/空闲的？
