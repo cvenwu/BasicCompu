@@ -1,6 +1,31 @@
+<!--
+ * @Author: yirufeng
+ * @Date: 2020-12-25 10:52:04
+ * @LastEditTime: 2021-07-17 13:22:47
+ * @LastEditors: yirufeng
+ * @Description: 
+ * @FilePath: /BasicCompu/docs/README.md
+-->
 # BasicComp
 > 记录-----面试计算机基础知识
 
+--------
+
+## 目录
+
+* [计算机网络](network/)
+* [操作系统](os/)
+* [mysql](mysql/)
+* [redis](redis/)
+* [算法面试题](algo/)
+
+
+* 配置
+  * [配置项](zh-cn/configuration.md)
+  * [主题](zh-cn/themes.md)
+  * [使用插件](zh-cn/plugins.md)
+  * [Markdown 配置](zh-cn/markdown.md)
+  * [代码高亮](zh-cn/language-highlight.md)
 
 --------
 
