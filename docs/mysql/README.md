@@ -10,7 +10,6 @@
 - 数据库架构设计：掌握针对高并发等特定场景中的解决方案，如读写分离、分库分表等。
 
 -----------
-
 ## References
 1. [参考](极客时间课程mysql实战45讲)
 2. [参考](https://zhuanlan.zhihu.com/p/85990712)
@@ -21,6 +20,16 @@
 7. [mysql日志系统](https://mp.weixin.qq.com/s?__biz=MzIyNDU2ODA4OQ==&mid=2247485074&idx=1&sn=0fcce3bb06f5dc874ef976248df5770e&chksm=e80db0e4df7a39f2452e5d185a50e0a2497e0ff5db7464faf25b29ef1f00f9fe185c4361e060&scene=21#wechat_redirect)
 8. [面试问烂的 MySQL 四种隔离级别，看完吊打面试官！](https://zhuanlan.zhihu.com/p/76743929)
 9. [MySQL事务隔离级别和实现原理（看这一篇文章就够了！）](https://zhuanlan.zhihu.com/p/117476959)
+10. 大明哥钉钉直播回放以及Github仓库的八股文
+11. [数据库考点](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyNDU2ODA4OQ==&action=getalbum&album_id=1793761107023577090&scene=173&from_msgid=2247485055&from_itemidx=1&count=3&nolastread=1#wechat_redirect)
+12. [MVCC只有RR和RC才会有](https://blog.csdn.net/weixin_36380516/article/details/115291399)
+13. [【133期】面试官：你说熟悉MySQL事务，那来谈谈事务的实现原理吧！](https://mp.weixin.qq.com/s?__biz=MzIyNDU2ODA4OQ==&mid=2247485055&idx=1&sn=9ee2329c8793dbb86d38aa8592ba230c&chksm=e80db009df7a391f3f70776a9eabd246cc9093d6d04840812bab2efd023961290091230ee25a&scene=21#wechat_redirect)
+14. [mysql 已读 未读_面试常问的MySQL事务ACID原理，你知道吗?](https://blog.csdn.net/weixin_39524574/article/details/111693947)
+15. [面试必备常见存储引擎与锁的分类，请查收](https://mp.weixin.qq.com/s/IIC3rM9PxaEyiICnjBIoPg)
+
+这种结果告诉我们其实在MySQL可重复读的隔离级别中并不是完全解决了幻读的问题(因为select查询的时候是在可重复读的情况下将会快照读，也就是直接复用之前的查询结果)，而是解决了读数据情况下的幻读问题。而对于修改的操作依旧存在幻读问题(对于修改操作，将会是当前读，也就是执行修改操作的时候去数据库里面查询最新的结果，可能之前我们查询的是没有这一条记录，但是现在我们要修改的时候去查询，发现会有记录因此就会出现幻读的情况，所以这种基于修改的幻读情况在RR隔离级别是无法避免的，但是这只是对数据修改的操作(update、insert、delete)当前读产生的结果，他其实不是幻读)。
+
+因此最后是如何解决幻读的呢？![HEiF6Z](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/HEiF6Z.png)
 
 ------------
 ## 事务
@@ -64,6 +73,13 @@
 
 注意：MySQL 的 Innodb 引擎通过 MVCC 和 next-key lock已经解决了幻读问题
 
+
+**MVCC原理：** 从多版本和锁机制来讲
+![Y2iiw9](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/Y2iiw9.png)
+![UWjZfI](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/UWjZfI.png)
+
+undo log里面存储的数据都是我们操作的反向数据，比如我们这次是插入操作，那么我们就会存储一个delete在undo log里面，
+
 ### 事务隔离级别，对应的问题
 > 类似问题：事务的隔离级别
 > 类似问题：mysql 隔离级别
@@ -91,6 +107,24 @@
 
 如何实现参考极客时间课程mysql实战45讲与https://blog.csdn.net/sanyuesan0000/article/details/90235335
 
+
+
+读未提交实现：因为读不会加任何锁，所以写操作在读的过程中修改数据，所以会造成脏读。好处是可以提升并发处理性能，能做到读写并行。换句话说，读的操作不能排斥写请求。
+
+读已提交实现：
+    为什么读已提交产生不可重复读：这跟 READ COMMITTED 级别下的MVCC机制有关系，在该隔离级别下每次 select的时候新生成一个版本号，所以每次select的时候读的不是一个副本而是不同的副本。在每次select之间有其他事务()或实例(都是在同一个事务)更新了我们读取的数据并提交了，那就出现了不可重复读。
+
+    因为读已提交是在每次select的时候会生成一个read-view，所以同一个事务select之间可能有其他事务修改了数据，或者自己这个事务也可能修改数据，因为自己的修改也是可以读取到的。
+
+    读的时候不加锁，写的时候会加写锁
+
+可重读实现：
+    读的时候加读锁，写的时候加写锁
+
+序列化实现：
+
+
+
 ### 事务的隔离有哪些,说一下每个隔离的区别,mysql默认使用哪个隔离,日常应用中应该使用已提交读还是可重复读
 
 > 其他同上
@@ -113,7 +147,7 @@
 
 ### 提交读和可重复读的实现原理
 > 以下答案来自于极客时间的mysql实战45讲
-在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑结果为准。在“可重复 读”隔离级别下，这个视图是在事务启动时创建的，整个事务存在期间都用这个视图。 在“读提交”隔离级别下，这个视图是在每个 SQL 语句开始执行的时候创建的。“读未提交”隔离级别下直接返回记录上的最新值，没有视图概念；而“串行 化”隔离级别下直接用加锁的方式来避免并行访问。
+在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑结果为准。在“可重复读”隔离级别下，这个视图是在事务启动时创建的，整个事务存在期间都用这个视图。 在“读提交”隔离级别下，这个视图是在每个 SQL 语句开始执行的时候创建的。“读未提交”隔离级别下直接返回记录上的最新值，没有视图概念；而“串行 化”隔离级别下直接用加锁的方式来避免并行访问。
 
 [参考](https://mp.weixin.qq.com/s?__biz=MzIyNDU2ODA4OQ==&mid=2247485055&idx=1&sn=9ee2329c8793dbb86d38aa8592ba230c&chksm=e80db009df7a391f3f70776a9eabd246cc9093d6d04840812bab2efd023961290091230ee25a&scene=21#wechat_redirect)
 
@@ -137,10 +171,11 @@ InnoDB采用的MVCC实现方式是：在需要时，通过undo日志构造出历
 !> 事务的特性以及对应的问题同上
 
 **那ACID靠什么保证的呢？** 参考: https://blog.csdn.net/weixin_39524574/article/details/111693947
-1. A原子性由undo log日志保证，它记录了需要回滚的日志信息，事务回滚时撤销已经执行成功的sql
-2. C一致性一般由代码层面来保证
-3. I隔离性由MVCC来保证
-4. D持久性由内存+redo log来保证，mysql修改数据同时在内存和redo log记录这次操作，事务提交的时候通过redo log刷盘，宕机的时候可以从redo log恢复
+1. 原子性：使用 undo log ，它记录了需要回滚的日志信息，事务回滚时撤销已经执行成功的sql
+2. 持久性：由内存+redo log来保证，mysql修改数据同时在内存和redo log记录这次操作，事务提交的3. 时候通过redo log刷盘，宕机的时候可以从redo log恢复
+4. 隔离性：使用锁以及MVCC,运用的优化思想有读写分离，读读并行，读写并行
+一致性：通过回滚，以及恢复，和在并发环境下的隔离做到一致性。
+
 ### mysql 的事务锁了解吗
 
 至于数据库事务锁，分为悲观锁和乐观锁，“悲观锁”认为数据出现冲突的可能性很大，“乐观锁”认为数据出现冲突的可能性不大。那悲观锁和乐观锁在基于 MySQL 数据库的应用开发中，是如何实现的呢？
@@ -466,7 +501,7 @@ begin; select * from user where age=20 for update; begin; insert into user(age) 
 ### 存储引擎在MySQL这个系统架构的哪个位置
 
 ### innodb与myisam的区别
-
+![hZkhr0](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/hZkhr0.png)
 ### mysql的存储引擎
 
 ------------
@@ -565,7 +600,7 @@ undo原子性，redo持久性
 ![Vs9wv3c7HbAqajP](https://i.loli.net/2021/03/24/Vs9wv3c7HbAqajP.png)
 
 
-mvcc只有RC 和  RR级别有
+mvcc只有RC 和  RR级别有，![2eKqO4](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/2eKqO4.jpg)
 读提交和可重复读是 mvcc
 RR级别通过  Next-Key锁防止幻读
 

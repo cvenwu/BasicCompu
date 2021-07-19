@@ -1,7 +1,7 @@
 <!--
  * @Author: yirufeng
  * @Date: 2020-12-25 10:52:04
- * @LastEditTime: 2021-07-17 13:22:47
+ * @LastEditTime: 2021-07-19 09:22:51
  * @LastEditors: yirufeng
  * @Description: 
  * @FilePath: /BasicCompu/docs/README.md
@@ -18,7 +18,6 @@
 * [mysql](mysql/)
 * [redis](redis/)
 * [算法面试题](algo/)
-
 
 * 配置
   * [配置项](zh-cn/configuration.md)
@@ -57,7 +56,7 @@
 2. 公司里面用到了XXX
 回答方式
 第一种：回答的时候谦虚一点，比如有所了解，略有耳闻，知道一丢丢
-第二种：如果真的了解过，不过对XXXXX的A B C稍微了解一点
+第二种：如果真的了解过，不过对XXXXX的A B C比较了解一点（此时面试的时候你就需要好好表现了，不能够太拉跨）
 
 比如会问你你对golang了解么，我们可以回答对golang了解，不过对GMP，GC稍微了解一点
 

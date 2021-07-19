@@ -5,27 +5,79 @@
 
 > redis就数据结构 内存淘汰机制 单线程 高可用 缓存应用
 
-## redis的数据结构
-> 因为小公司项目 Redis 用的是 String 数据结构。
-> 面试官其实想考察的是 Redis 的数据结构，这个时候就应该主动告诉面试官自己知道 Redis 的数据结构！
-> 类似问题：redis的数据类型
+## redis的IO模型
+redis采用的是IO多路复用模型，核心分为四个组件：
+1. 多路复用程序
+2. 套接字队列
+3. 事件分派器
+4. 时间处理器
 
-1. 5种基本数据结构：string，list，hash，set，zset
-2. 3种高级数据结构：bitmap、geo、hyperloglog
-3. redis5.0引入的数据结构 streams，这是Redis5.0引入的全新数据结构，用一句话概括Streams就是Redis实现的内存版kafka。而且，Streams也有Consumer Groups的概念。通过Redis源码中对stream的定义我们可知，streams底层的数据结构是radix tree：
+但是其实还有一个组件叫做套接字队列：![C94uy3](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/C94uy3.png)
 
-[redis中的hashtable介绍](https://blog.csdn.net/u010710458/article/details/80604740)
+具体流程图：![sFUXVP](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/sFUXVP.png)
 
-1. [参考](https://blog.csdn.net/assasin0308/article/details/103965255)
-2. [参考](https://juejin.cn/post/6844903644798664712)
+所谓的建立连接以及套接字之类的，表现形式就是文件描述符，IO多路复用会挑出准备好(数据已经发过来或者我准备写数据了)的文件描述符，丢过去给套接字队列，事件分发器会从套接字队列里面拿到我们的套接字，之后分发器会挑具体的事件处理器，这个图看懂了，那么redis的IO多路复用就可以答出来了。
 
+建议采用一个实例去记，到时候也好解释
+![0cuVTu](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/0cuVTu.png)
+
+**扩展点一：从redis 6.0的多线程模型去讲解**
+1. redis这种模型的瓶颈在于从套接字中读写数据，因此在6.0中引入了异步IO线程，专门负责读取IO数据
+2. 具体解释：主线程监听到套接字事件，然后找到一个IO线程去读取数据，然后主线程根据命令找到对应的事件处理器，并执行命令，之后写入数据的时候又会找到一个IO线程去写数据。总结就是，读取数据和写数据的时候都会开启一个线程，而轮询与命令的执行都是主线程。
+
+![3b5TiN](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/3b5TiN.png)
+
+**扩展点二：`memcache`的IO模型**
+IO模型本质上是多路复用。与redis不同的是，`memcache`中的IO多路复用是多线程的，并且命令的执行也是多线程的，`memcache`的`acceptor线程`监听到套接字事件之后，丢给`workers线程`，线程负责读写数据并且执行命令
+
+![ixEPN1](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/ixEPN1.png)
+
+**扩展点三：比较redis与memcache**
+从redis6.0之后，两者差别不大，**根本的差距在于redis只有一个主线程执行命令，但是memcache是各自的线程执行各自的命令**
+
+引申出的问题：
+1. Redis为什么引入多线程模型？IO是多线程的，但是命令的执行还是单线程的
+2. Redis一定是单线程的么？6.0之前也不是真正的单线程，比如save是fork一个线程出来的。我们一般说redis是单线程，只是因为在命令执行的时候是单线程的
+3. Redis如何保证高性能？
+
+如何引导：
+1. 讨论redis为什么那么高效
+2. 讨论到多路复用
+3. 讨论到IO模型
+4. 讨论到"redis一定是单线程么"这种问题
+5. 讨论到`memcache`和`redis`的区别
+
+
+## redis过期处理
+> 主要解决的是如何处理Redis中过期的key
+
+[参考](https://blog.csdn.net/u014681799/article/details/113651248)
+
+两种策略：定期删除和惰性删除
+
+![33W6Mo](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/33W6Mo.png)
+
+redis过期处理两种方式：
+1. 定期删除：![SbYROR](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/SbYROR.png) 在你设置的那个时间点之前，能删除多少删除多少，这个是为了平衡我们的效率。重点就是**点到即止**
+2. 惰性删除：![I820qE](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/I820qE.png)
+RDB就是将我们所有的k-v写入到数据库中，然后每次加载RDB的时候我们就不会加载过期的k-v，也就是(RDB不读)
+AOF就是压缩合并，避免重写太多，并且重写的时候，会忽略已经过期的key，也就是AOF不写。
+从服务器永远不会删除自己的key，它会等到主服务器删除自己的key之后将命令同步到从服务器。
+
+![5Q5sPS](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/5Q5sPS.png)
+
+从服务器上不可能删除自己的key的，因为没有办法通知主服务器也删除这个key。因此当读请求打到主服务器上的时候，如果主服务器发现这个key过期就会删除这个key，但是当读请求打到从服务器上的时候，这个时候就要区分，如果在redis3.2版本之前，从库发现过期也会直接返回，在3.2之后，发现过期直接返回Null，但是需要注意即便是在3.2之后，从库虽然对于过期的key返回null，但是依然不会删除，因为需要等待主库删除之后才会删除这个过期的key。总结就是，从头到尾，从库一直都是等主库的删除才删除，3.2之前不管有没有过期从库都是直接返回值，3.2之后从库如果判断出是过期的key会直接返回Null，但是注意不会删除哦，此时我们需要使用`ttl`命令查看是否过期
 
 类似问题：
-1. redis底层数据结构 2次
-2. redis源码
+1. 为什么redis定期删除策略不删除全部过期的key? 开销太大
+2. redis的定时删除策略是怎样的？（重要的是点到即止）
+3. redis过期之后，还可以读到数据么？如果是在3.2之前的从库读取的，可以读取到数据
+4. 为什么有时候key已经过期了，但是还能读取到数据？用的是redis的3.2版本，并且还是在从服务器上
+5. 如何解决redis从库key过期依然返回数据的问题
 
-## redis内存淘汰机制
 
+## redis的内存淘汰机制
+> 主要是用来处理，内存快要满的时候如何释放部分内存
 eviction是驱逐的意思。volatile
 1. noeviction：当内存使用超过配置的时候会返回错误，不会驱逐任何键。
 2. allkeys-lru：加入键的时候，如果过限，首先通过LRU算法驱逐最久没有使用的键
@@ -35,6 +87,9 @@ eviction是驱逐的意思。volatile
 6. volatile-ttl：从配置了过期时间的键中驱逐马上就要过期的键
 7. volatile-lfu：从所有配置了过期时间的键中驱逐使用频率最少的键
 8. allkeys-lfu：从所有键中驱逐使用频率最少的键
+
+lfu：最少频率使用
+lru：最近最少使用
 
 
 类似问题：redis数据淘汰机制
@@ -50,6 +105,83 @@ eviction是驱逐的意思。volatile
 
 redis4.0 引入了volatile-lfu和allkeys-lfu淘汰策略，将访问频率最少的键值对淘汰
 ![znfHJ6](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/znfHJ6.png)
+
+
+## redis的数据结构
+
+> redis的数据结构有两种表现形式：
+
+redis数据结构的两种表现形式：
+1. 从value的类型来讲：![BCa3ID](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/BCa3ID.jpg)
+2. 从底层数据结构来讲：![yKS267](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/yKS267.jpg)x`
+
+
+
+**Redis使用的字符串有什么特点：**
+![UOXvw0](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/UOXvw0.png)
+Redis为什么不直接使用C字符串：直接答出SDS的特性
+
+**Redis的hash table是如何实现的**
+
+[redis中的hashtable介绍](https://blog.csdn.net/u010710458/article/details/80604740)
+
+![aSNSVG](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/aSNSVG.png)
+使用拉链法解决冲突，并且冲突的时候会将元素加入到表头，并且redis采用Murmurhash2，该算法效率高，随机性好，可以减少冲突可能。
+
+![mL1MIA](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/mL1MIA.png)
+
+TODO：了解golang的渐进式哈希的过程
+
+特色：rehash过程（对比一下golang的rehash过程）
+
+类似问题：
+1. 为什么要使用渐进式rehash，是为了平摊我们的耗时
+2. 渐进式rehash有什么缺点？耗时比较大，比如之前我们在一张表里面查，但是后面我们需要在两张表查
+3. redis的哈希表扩容有什么特色
+4. redis的哈希表如何扩容
+
+**ziplist是如何实现的？有什么用？**
+三个要点：连续内存，数据移动，连锁更新
+
+![8udJJ1](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/8udJJ1.png)
+![z7vaZg](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/z7vaZg.png)
+![v9bqfe](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/v9bqfe.png)
+在列表中的表现：![j3MDvn](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/j3MDvn.png)
+在字典中的表现：![d0jxZ0](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/d0jxZ0.png)
+在有序集合中的表现：![pQH6Xq](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/pQH6Xq.png)
+
+
+什么时候会触发连锁更新：增删改都会触发
+
+![CnsIfP](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/CnsIfP.png)
+
+**redis的整数集合是什么？有什么特色**
+特色：升级不降级
+![ztXljO](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/ztXljO.png)
+
+
+总结：![PDBzrd](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/PDBzrd.png)
+
+> 因为小公司项目 Redis 用的是 String 数据结构。
+> 面试官其实想考察的是 Redis 的数据结构，这个时候就应该主动告诉面试官自己知道 Redis 的数据结构！
+> 类似问题：redis的数据类型
+
+1. 5种基本数据结构：string，list，hash，set，zset
+2. 3种高级数据结构：bitmap、geo、hyperloglog
+3. redis5.0引入的数据结构 streams，这是Redis5.0引入的全新数据结构，用一句话概括Streams就是Redis实现的内存版kafka。而且，Streams也有Consumer Groups的概念。通过Redis源码中对stream的定义我们可知，streams底层的数据结构是radix tree：
+
+
+类似问题：
+1. redis底层数据结构 2次
+2. redis源码
+
+
+
+1. [参考](https://blog.csdn.net/assasin0308/article/details/103965255)
+2. [参考](https://juejin.cn/post/6844903644798664712)
+
+
+
 ## redis内存满了怎么办
 
 1. 修改配置文件
