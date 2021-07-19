@@ -1,7 +1,7 @@
 <!--
  * @Author: yirufeng
  * @Date: 2020-12-25 10:52:04
- * @LastEditTime: 2021-07-19 09:22:51
+ * @LastEditTime: 2021-07-19 16:39:58
  * @LastEditors: yirufeng
  * @Description: 
  * @FilePath: /BasicCompu/docs/README.md
@@ -13,11 +13,13 @@
 
 ## 目录
 
+* [go语言面试题](go/)
 * [计算机网络](network/)
 * [操作系统](os/)
 * [mysql](mysql/)
 * [redis](redis/)
 * [算法面试题](algo/)
+
 
 * 配置
   * [配置项](zh-cn/configuration.md)
