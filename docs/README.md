@@ -7,7 +7,7 @@
  * @FilePath: /BasicCompu/docs/README.md
 -->
 # BasicComp
-> 记录-----面试计算机基础知识
+> 记录-----面试计算机基础知识.....
 
 --------
 
