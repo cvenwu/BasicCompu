@@ -11,7 +11,7 @@
 
 > 记录面试常考题的答案，帮助自己复习获得更多Offer
 
-* 数据库：Mysql、redis
+* 数据库：Mysql、redis、influxdb
 * 基础知识：计算机网络、操作系统
 * 语言相关：Golang、
 * 消息队列：rabbitMQ
