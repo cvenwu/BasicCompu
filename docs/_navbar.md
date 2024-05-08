@@ -1,15 +1,21 @@
-* 入门
-  * [快速开始](zh-cn/quickstart.md)
-  * [多页文档](zh-cn/more-pages.md)
-  * [定制导航栏](zh-cn/custom-navbar.md)
-  * [封面](zh-cn/cover.md)
+* [<span class="iconfont icon-icon_fabu"></span> 导航](README.md)
   * [:us:, :uk:](/)
   * [:cn:](/zh-cn/)
-
-
-* 配置
-  * [配置项](zh-cn/configuration.md)
-  * [主题](zh-cn/themes.md)
-  * [使用插件](zh-cn/plugins.md)
-  * [Markdown 配置](zh-cn/markdown.md)
-  * [代码高亮](zh-cn/language-highlight.md)
+* 基础
+  * [Go语言面试题](go/)
+  * [计算机网络](network/)
+  * [操作系统](os/)
+  * [算法面试题](algo/)
+  * [Linux](linux/)
+  * [Mysql](mysql/)
+  * [Redis](redis/)
+  * [Kafka](kafka/)
+  * [Nginx](nginx/)
+* 软技能
+  * [系统设计](design/)
+  * [分布式](distributed/)
+  * [面试技巧](tricks/)
+  * [项目](projects/)
+  * [设计模式](pattern/)
+* 归档
+  * [未整理面试题](archive/)

@@ -1,11 +1,3 @@
-<!--
- * @Author: yirufeng
- * @Date: 2020-12-25 10:52:04
- * @LastEditTime: 2021-11-26 16:27:33
- * @LastEditors: yirufeng
- * @Description: 
- * @FilePath: /BasicCompu/README.md
--->
 # BasicComp
 记录---面试计算机基础知识 
 

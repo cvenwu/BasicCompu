@@ -2,8 +2,8 @@
 
 * [计算机网络](network/)
 * [操作系统](os/)
-* [mysql](mysql/)
-* [redis](redis/)
+* [MySql](mysql/)
+* [Redis](redis/)
 * [算法面试题](algo/)
 
 

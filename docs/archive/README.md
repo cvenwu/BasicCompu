@@ -1,15 +1,12 @@
 # 中间件
 
-
 ## CDN
-
 
 3. 一致性哈希了解么？
 
 Kafka 的消费者如何做消息去重?
 
 22. 介绍一下 Kafka 的 ConsumerGroup
-
 
 Kubernetes 和 Docker 用得怎么样?
 
