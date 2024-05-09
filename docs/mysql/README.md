@@ -1,31 +1,60 @@
 # Mysql
 
-!> mysql面试题
+!> Mysql面试题重点围绕事务、隔离级别、锁、索引、存储引擎
 
-重点：事务，隔离级别，锁，索引，存储引擎
-
+考察点如下：
 - 数据库设计基础：掌握数据库设计中的基本范式，以及基础概念，例如表、视图、索引、外键、序列号生成器等，掌握数据库的数据类型的使用，清楚业务实体关系与数据库结构的映射。
 - 数据库隔离级别：掌握 MySQL 四种事务隔离级别的基础知识，并进一步了解 MVCC、Locking 等机制对于处理的进阶问题的解决；还需要了解不同索引类型的使用，甚至是底层数据结构和算法等。
 - SQL 优化：掌握基础的 SQL 调优技巧，至少要了解基本思路是怎样的，例如 SQL 怎样写才能更好利用索引、知道如何分析 SQL 执行计划等。
 - 数据库架构设计：掌握针对高并发等特定场景中的解决方案，如读写分离、分库分表等。
 
------------
-## References
-1. [参考](极客时间课程mysql实战45讲)
-2. [参考](https://zhuanlan.zhihu.com/p/85990712)
-3. [参考](https://blog.csdn.net/sanyuesan0000/article/details/90235335)
-4. [参考](https://www.cnblogs.com/chenglc/p/10912340.html)
-5. [参考](https://zhuanlan.zhihu.com/p/140876416)
-6. [参考2](https://zhuanlan.zhihu.com/p/222958908)
-7. [mysql日志系统](https://mp.weixin.qq.com/s?__biz=MzIyNDU2ODA4OQ==&mid=2247485074&idx=1&sn=0fcce3bb06f5dc874ef976248df5770e&chksm=e80db0e4df7a39f2452e5d185a50e0a2497e0ff5db7464faf25b29ef1f00f9fe185c4361e060&scene=21#wechat_redirect)
+
+
+## 事务
+
+## 隔离级别
+
+## 锁
+
+## 索引
+
+## 存储引擎
+
+## 日志
+
+## 性能优化
+
+
+## 高可靠
+
+## 数据库设计
+
+
+
+## 参考
+1. 极客时间《Mysql实战45讲》
+2. [浅谈MySQL数据库中的锁与事务](https://zhuanlan.zhihu.com/p/85990712)
+3. [透彻解读mysql的可重复读、幻读及实现原理](https://blog.csdn.net/sanyuesan0000/article/details/90235335)
+4. [MySQL 中事务的实现](https://www.cnblogs.com/chenglc/p/10912340.html)
+5. [阿里P8整理Mysql面试题答案，助你“脱颖而出”，吊打面试官！（建议收藏）](https://zhuanlan.zhihu.com/p/140876416)
+6. [面试必刷：最有用的Mysql面试题，面试了无数公司总结的](https://zhuanlan.zhihu.com/p/222958908)
+7. [Mysql日志系统](https://mp.weixin.qq.com/s?__biz=MzIyNDU2ODA4OQ==&mid=2247485074&idx=1&sn=0fcce3bb06f5dc874ef976248df5770e&chksm=e80db0e4df7a39f2452e5d185a50e0a2497e0ff5db7464faf25b29ef1f00f9fe185c4361e060&scene=21#wechat_redirect)
 8. [面试问烂的 MySQL 四种隔离级别，看完吊打面试官！](https://zhuanlan.zhihu.com/p/76743929)
 9. [MySQL事务隔离级别和实现原理（看这一篇文章就够了！）](https://zhuanlan.zhihu.com/p/117476959)
-10. 大明哥钉钉直播回放以及Github仓库的八股文
+10. [大明哥钉钉直播回放以及GitHub仓库的八股文](https://github.com/flycash/interview-baguwen/tree/main)
 11. [数据库考点](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyNDU2ODA4OQ==&action=getalbum&album_id=1793761107023577090&scene=173&from_msgid=2247485055&from_itemidx=1&count=3&nolastread=1#wechat_redirect)
 12. [MVCC只有RR和RC才会有](https://blog.csdn.net/weixin_36380516/article/details/115291399)
 13. [【133期】面试官：你说熟悉MySQL事务，那来谈谈事务的实现原理吧！](https://mp.weixin.qq.com/s?__biz=MzIyNDU2ODA4OQ==&mid=2247485055&idx=1&sn=9ee2329c8793dbb86d38aa8592ba230c&chksm=e80db009df7a391f3f70776a9eabd246cc9093d6d04840812bab2efd023961290091230ee25a&scene=21#wechat_redirect)
-14. [mysql 已读 未读_面试常问的MySQL事务ACID原理，你知道吗?](https://blog.csdn.net/weixin_39524574/article/details/111693947)
+14. [Mysql 已读 未读_面试常问的MySQL事务ACID原理，你知道吗?](https://blog.csdn.net/weixin_39524574/article/details/111693947)
 15. [面试必备常见存储引擎与锁的分类，请查收](https://mp.weixin.qq.com/s/IIC3rM9PxaEyiICnjBIoPg)
+
+
+
+----------------------------------
+
+
+
+
 
 这种结果告诉我们其实在MySQL可重复读的隔离级别中并不是完全解决了幻读的问题(因为select查询的时候是在可重复读的情况下将会快照读，也就是直接复用之前的查询结果)，而是解决了读数据情况下的幻读问题。而对于修改的操作依旧存在幻读问题(对于修改操作，将会是当前读，也就是执行修改操作的时候去数据库里面查询最新的结果，可能之前我们查询的是没有这一条记录，但是现在我们要修改的时候去查询，发现会有记录因此就会出现幻读的情况，所以这种基于修改的幻读情况在RR隔离级别是无法避免的，但是这只是对数据修改的操作(update、insert、delete)当前读产生的结果，他其实不是幻读)。
 
@@ -632,10 +661,6 @@ MVCC是解决不可重复读
 4.从业务场景出发，是保证强一致性（秒杀业务），还是最终一致性（实时性要求不高的业务）
 ## 建立一张数据库表需要考虑哪些因素，索引的底层实现，是否了解过b+树之外的索引结构。
 
-
-
-
-
 一条sql语句的执行过程：https://mp.weixin.qq.com/s/xVWq3u-rekmg6HNGKRncng
 
 ![wQhav0](https://cdn.jsdelivr.net/gh/sivanWu0222/ImageHosting@master/uPic/wQhav0.png)
@@ -684,7 +709,6 @@ mysql，innodb 和 myisam 引擎区别
 数据库事务回滚方法
 
 
-
 MySQL 的存储引擎用的是什么?为什么选 InnoDB?
 
 12. MySQL 的聚簇索引和非聚簇索引有什么区别？
@@ -692,7 +716,6 @@ MySQL 的存储引擎用的是什么?为什么选 InnoDB?
 13. B+树和二叉树有什么区别和优劣？
 
 14. 针对一个场景设计索引，考察的是联合索引与列选择性的知识
-
 
 现有一个新的查询场景, 要怎么解决？
 

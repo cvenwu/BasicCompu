@@ -7,7 +7,7 @@
   * [操作系统](os/)
   * [算法面试题](algo/)
   * [Linux](linux/)
-  * [Mysql](mysql/)
+  * [<span class="icon iconfont icon-mysql"></span>Mysql](mysql/)
   * [Redis](redis/)
   * [Kafka](kafka/)
   * [Nginx](nginx/)

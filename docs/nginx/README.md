@@ -1,8 +1,13 @@
-# nginx
+# Nginx
 
-## 负载均衡怎么实现
+## 负载均衡原理
 
-## 项目中nginx用来干什么
+### 面试题：负载均衡怎么实现
+
+
+## 项目
+
+### 项目中Nginx用来干什么
 
 
 ## nginx的master-worker 和 php-fpm的master-worker有什么区别？
